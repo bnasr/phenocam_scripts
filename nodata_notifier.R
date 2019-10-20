@@ -54,7 +54,7 @@ sendEmail <- function(to, subject, body){
             replyTo='Bijan Seyednasrollah <bijan.s.nasr@gmail.com>',
             smtp = list(host.name = "smtp.gmail.com", port = 465,
                         user.name = "phenocam.network@gmail.com",
-                        passwd = readLines('.key'),
+                        passwd = readLines('~/phenocam_scripts/.key'),
                         ssl = TRUE
             ),
             authenticate = TRUE,
