@@ -150,6 +150,12 @@ emailDT <- phenoDT[(delay%in%reminderInterval|
                        '---------------------------------------------------------------------------------\n'),
                      subject = paste0('phenocam at ', site, ': no image in ', last,' days'))]
 
+#correcting NEON contacts
+emailDT[grepl(pattern = 'NEON', x = site), contact1 := "Tanya Vance <tvance@battelleecology.org>"]
+emailDT[grepl(pattern = 'NEON', x = site), contact2 := "Teresa Burlingame <tburlingame@battelleecology.org>"]
+
+
+
 emailList <- emailDT[,.(site, last, contact1, contact2)]
 
 
@@ -177,10 +183,6 @@ sendEmail(to = c('bijan.s.nasr@gmail.com','adam.young@nau.edu'), body = myemailB
 
 lastrun.file <- '/tmp/~lastrun.phenoemail'
 if(file.exists(lastrun.file)) lastrun.phenoemail <- readLines(lastrun.file)
-
-#correcting NEON contacts
-emailDT[grepl(pattern = 'NEON', x = site), contact1 := "Tanya Vance <tvance@battelleecology.org>"]
-emailDT[grepl(pattern = 'NEON', x = site), contact2 := "Teresa Burlingame <tburlingame@battelleecology.org>"]
 
 
 n <- nrow(emailDT)
