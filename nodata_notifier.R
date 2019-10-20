@@ -178,6 +178,10 @@ sendEmail(to = c('bijan.s.nasr@gmail.com','adam.young@nau.edu'), body = myemailB
 lastrun.file <- '/tmp/~lastrun.phenoemail'
 if(file.exists(lastrun.file)) lastrun.phenoemail <- readLines(lastrun.file)
 
+#correcting NEON contacts
+emailDT[grepl(pattern = 'NEON', x = site), contact1 := "Tanya Vance <tvance@battelleecology.org>"]
+emailDT[grepl(pattern = 'NEON', x = site), contact2 := "Teresa Burlingame <tburlingame@battelleecology.org>"]
+
 
 n <- nrow(emailDT)
 
