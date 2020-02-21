@@ -9,7 +9,7 @@ phenos <- get_phenos()
 rois <- merge(rois, phenos[,.(site, site_type)])
 
 n <- nrow(rois)
-# i=1
+# i=233
 pb <- txtProgressBar(1, n, style = 3)
 for(i in 1:n){
   site <- rois[i, site]
@@ -25,30 +25,34 @@ for(i in 1:n){
   ts3 <- as.data.table(read.csv(paste0('/data/archive/', site, '/ROI/', roi_name, '_3day.csv'), header = T, skip =22))
   ts3[, date := as.Date(date)]
   
-  clRange <- range(ts3$date)
+  # clRange <- range(ts3$date)
   
   cli <- try(readJPEG(paste0('/data/archive/', site, '/ROI/', site, '-cli.jpg')))
   if(class(cli)=='try-error') next()
   clitxt <- as.data.table(read.csv(paste0('/data/archive/', site, '/ROI/', site, '-cli.txt')))
   clitxt[, Date := as.Date(Date)]
-
-  w <- (clitxt$Date>=clRange[1]) & (clitxt$Date<=clRange[2]) 
+  xrange <- range(as.Date(clitxt$Date))
   
-  png(file = paste0('rois/ind/', roi_name, '.png'), width = 11, height = 5, res = 300, units = 'in')
+  # w <- (clitxt$Date>=clRange[1]) & (clitxt$Date<=clRange[2]) 
+  
+  png(file = paste0('rois/', roi_name, '.png'), width = 11, height = 5, res = 300, units = 'in')
+  
   par(mfrow = c(2,1), mar = c(0,0,0,0), oma = c(2,2,2,0))
-  plot(ts1$date, ts1$gcc_90, col = 'green', type = 'l', xaxs='i',yaxs='i',  xaxt = 'n')
+  plot(ts1$date, ts1$gcc_90, col = 'green', type = 'l', xaxs='i',yaxs='i',  xaxt = '0', xlim = xrange)
   lines(ts3$date, ts3$gcc_90, col = 'red', lty =2)
   abline(v = startdate, col = 'yellow')
   abline(v = enddate, col = 'yellow')
   
-  legend('topright', legend = c('1-day', '3-day'), col = c('green', 'red'), lty = 1:2)
-  plot(ts3$date, ts3$gcc_90, col = 'green', type = 'n', xaxs='i',yaxs='i', yaxt = 'n')
+  legend('topright', legend = c('1-day', '3-day'), col = c('green', 'red'), lty = 1:2, bty = 'n')
+  plot(ts3$date, ts3$gcc_90, col = 'green', type = 'n', xaxs='i',yaxs='i', yaxt = 'n', xlim = xrange)
   usr <- par()$usr
-  if(any(w)) rasterImage(cli[,w,], usr[1], usr[3], usr[2], usr[4])
+  rasterImage(cli, usr[1], usr[3], usr[2], usr[4])
   abline(v = startdate, col = 'yellow')
   abline(v = enddate, col = 'yellow')
+  # polygon(usr[c(1,2,2,1)], usr[c(3,3,4,4)], border = 'yellow', lwd= 5)
   
   mtext(paste(roi_name, '   Type = ', site_type), outer = T)
+  
   dev.off()
   
   setTxtProgressBar(pb, i)
