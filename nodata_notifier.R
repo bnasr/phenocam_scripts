@@ -54,7 +54,7 @@ sendEmail <- function(to, subject, body){
             replyTo='Bijan Seyednasrollah <bijan.s.nasr@gmail.com>',
             smtp = list(host.name = "smtp.gmail.com", port = 465,
                         user.name = "phenocam.network@gmail.com",
-                        passwd = readLines('.key'),
+                        passwd = readLines('~/phenocam_scripts/.key'),
                         ssl = TRUE
             ),
             authenticate = TRUE,
@@ -149,6 +149,12 @@ emailDT <- phenoDT[(delay%in%reminderInterval|
                        'you would like to change this information.\n',
                        '---------------------------------------------------------------------------------\n'),
                      subject = paste0('phenocam at ', site, ': no image in ', last,' days'))]
+
+#correcting NEON contacts
+emailDT[grepl(pattern = 'NEON', x = site), contact1 := "Tanya Vance <tvance@battelleecology.org>"]
+emailDT[grepl(pattern = 'NEON', x = site), contact2 := "Teresa Burlingame <tburlingame@battelleecology.org>"]
+
+
 
 emailList <- emailDT[,.(site, last, contact1, contact2)]
 
