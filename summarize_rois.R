@@ -38,13 +38,15 @@ for(i in 1:n){
   png(file = paste0('rois/', roi_name, '.png'), width = 11, height = 5, res = 300, units = 'in')
   
   par(mfrow = c(2,1), mar = c(0,0,0,0), oma = c(2,2,2,0))
-  plot(ts1$date, ts1$gcc_90, col = 'green', type = 'l', xaxs='i',yaxs='i',  xaxt = '0', xlim = xrange)
-  lines(ts3$date, ts3$gcc_90, col = 'red', lty =2)
-  abline(v = startdate, col = 'yellow')
-  abline(v = enddate, col = 'yellow')
+  plot(ts1$date, ts1$gcc_90, col = 'cyan', type = 'l', xaxs='i',yaxs='i',  xaxt = 'n', xlim = xrange)
+  lines(ts3$date, ts3$gcc_90, col = 'black', lty =1)
+  abline(v = startdate, col = 'red')
+  abline(v = enddate, col = 'red')
   
-  legend('topright', legend = c('1-day', '3-day'), col = c('green', 'red'), lty = 1:2, bty = 'n')
-  plot(ts3$date, ts3$gcc_90, col = 'green', type = 'n', xaxs='i',yaxs='i', yaxt = 'n', xlim = xrange)
+  legend('topright', legend = c('1-day', '3-day', 'mask'), 
+         col = c('cyan', 'black', 'red'), lty = c(1,1,1), lwd = c(2,2,2), bty = 'n')
+  
+  plot(ts3$date, ts3$gcc_90, type = 'n', xaxs='i',yaxs='i', yaxt = 'n', xlim = xrange)
   usr <- par()$usr
   rasterImage(cli, usr[1], usr[3], usr[2], usr[4])
   abline(v = startdate, col = 'yellow')
