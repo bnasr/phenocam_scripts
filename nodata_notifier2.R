@@ -5,7 +5,8 @@ library(lubridate, warn.conflicts = F)
 library(data.table, warn.conflicts = F)
 library(rjson, warn.conflicts = F)
 #library(rJava, warn.conflicts = F)
-library(mailR, warn.conflicts = F)
+#library(mailR, warn.conflicts = F)
+library(sendmailR)
 
 delayPairs <- t(data.frame(
   bouldinalfalfa = 20,
@@ -49,18 +50,27 @@ normalDelay$site <- gsub(pattern = '.', replacement = '-',rownames(delayPairs), 
 
 sendEmail <- function(to, subject, body){
   sender <- "PhenoCam Network <bijan.s.nasr@gmail.com>"
-  send.mail(from = sender,
-            to = to,
-            subject = subject,
-            body = body, 
-            replyTo='Bijan Seyednasrollah <bijan.s.nasr@gmail.com>',
-            smtp = list(host.name = "smtp.gmail.com", port = 465,
-                        user.name = "phenocam.network@gmail.com",
-                        passwd = readLines('~/phenocam_scripts/.key'),
-                        ssl = TRUE
-            ),
-            authenticate = TRUE,
-            send = TRUE)
+	Server=list(smtpServer='localhost')
+
+#from = sprintf("<tmilliman@klima.sr.unh.edu>", "Thomas Milliman")
+#to = sprintf("<thomas.milliman@gmail.com>")
+#subject = "test email via sendmailR"
+#body = "hi there"
+
+sendmail(sender, to, subject, body, control=Server)
+
+ # send.mail(from = sender,
+ #           to = to,
+ #           subject = subject,
+ #           body = body, 
+ #           replyTo='Bijan Seyednasrollah <bijan.s.nasr@gmail.com>',
+ #           smtp = list(host.name = "smtp.gmail.com", port = 465,
+ #                       user.name = "phenocam.network@gmail.com",
+ #                       passwd = readLines('~/phenocam_scripts/.key'),
+ #                       ssl = TRUE
+ #           ),
+ #           authenticate = TRUE,
+ #           send = TRUE)
 }
 
 
@@ -174,7 +184,7 @@ write.table(delayList, file  = con, row.names = F, col.names = F, quote = F, sep
 # writeLines(kable(delayList), con = con)
 # writeLines(kable(emailList), con = con)
 close.connection(con)
-
+cat('test\n\n\n')
 #myemailBody <- ''
 #for(i in 1:length(myemail)) myemailBody <- paste(myemailBody, myemail[i], '\n')
 
