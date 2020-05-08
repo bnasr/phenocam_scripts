@@ -48,7 +48,7 @@ normalDelay$site <- gsub(pattern = '.', replacement = '-',rownames(delayPairs), 
 #normalDelay
 
 sendEmail <- function(to, subject, body){
-  sender <- "PhenoCam Network <bijan.s.nasr@gmail.com>"
+  sender <- "PhenoCam Network <phenocam.network@gmail.com>"
   send.mail(from = sender,
             to = to,
             subject = subject,
