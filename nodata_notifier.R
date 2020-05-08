@@ -8,6 +8,9 @@ library(rjson, warn.conflicts = F)
 library(mailR, warn.conflicts = F)
 
 delayPairs <- t(data.frame(
+  arsmorris1 =10,
+  arsmorris2 =10,
+  arsmorris3 =10,
   bouldinalfalfa = 20,
   bouldincorn = 20,
   coville = 1000,
