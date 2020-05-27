@@ -15,7 +15,7 @@ dt$V2 <- NULL
 today <- Sys.Date()
 
 # date range to plot
-date_range <- today - c(33:26)
+date_range <- today - c(7:0)
 
 
 png(paste0(inout_dir, 'countNiwot.png'),
@@ -25,5 +25,5 @@ plot(dt[date  %in% date_range],
      ylab = 'Daily Count',
      type = 'l')
 mtext('Number of files', line = 1)
-dev.off()
+invisible(dev.off())
 
