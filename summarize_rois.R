@@ -19,7 +19,7 @@ for(i in 1:n){
   site <- rois[i, site]
   roi_name <- rois[i, roi_name]
   site_type <- rois[i, site_type]
-  site_years <- missing_data_pct <- rois[i, site_years]
+  site_years <- rois[i, site_years]
   missing_data_pct <- rois[i, missing_data_pct]
   last_date <- missing_data_pct <- rois[i, last_date]
   
