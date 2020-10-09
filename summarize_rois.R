@@ -5,7 +5,7 @@ library(jpeg)
 
 
 out_dir <- 'rois/update/'
-dir.create(out_dir, recursive = TRUE, showWarnings = TRUE)
+dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 rois <- get_rois()
 phenos <- get_phenos()
@@ -68,7 +68,7 @@ pb <- txtProgressBar(1, n, style = 3)
   mtext(paste(), outer = T)
   
   mtext(outer = TRUE,
-        text = paste('\ROI: ', roi_name, 
+        text = paste('ROI: ', roi_name, 
                      '\tType: ', site_type,
                      '\tLenght:', site_years, 'y', 
                      '\tGap:', missing_data_pct, '%\t',
