@@ -18,7 +18,7 @@ n <- nrow(rois)
 
 pb <- txtProgressBar(1, n, style = 3)
 
-# for(i in 1:n)
+for(i in 1:n)
 {
   site <- rois[i, site]
   roi_name <- rois[i, roi_name]
