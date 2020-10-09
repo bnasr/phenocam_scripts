@@ -1,3 +1,5 @@
+# This file is to plot the uploads counts for niwotflir to help Jim LeMoine with the data management
+# 
 library(data.table)
 y <- year(Sys.Date())
 

@@ -1,4 +1,5 @@
 #!/bin/bash
+# This file checks the daily uploads for niwotflir for Jim LeMoine
 year="$1"
 d1="$2"
 d2="$3"

@@ -1,3 +1,6 @@
+#!/bin/bash
+# This script checks the recent metadata files in the ftp directory and return those on AWB 
+
 if [ $# -eq 0 ]; then
 	term='balance=1'
 else 

@@ -1,3 +1,4 @@
+# Ploting CLI images for each ROI to check the data continuity
 library(phenocamapi)
 library(xROI)
 library(jpeg)
@@ -13,6 +14,7 @@ rois <- rois[sequence_number%in%seq(1000, 9000, 1000)]
 n <- nrow(rois)
 # i=233
 pb <- txtProgressBar(1, n, style = 3)
+
 for(i in 1:n){
   site <- rois[i, site]
   roi_name <- rois[i, roi_name]

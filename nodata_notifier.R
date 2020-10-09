@@ -1,6 +1,9 @@
+# Send notifying emails when data is not available
+
 #library(R.oo, warn.conflicts = F)
 #library(R.methodsS3, warn.conflicts = F)
 #library(methods)
+
 library(lubridate, warn.conflicts = F)
 library(data.table, warn.conflicts = F)
 library(rjson, warn.conflicts = F)
