@@ -113,7 +113,7 @@ if(n!=0 & n<20)for(i in 1:n){
                          pattern = '$SITENAME', replacement = site)
       email_body <- gsub(email_body,
                          pattern = '$DELAY', replacement = delay)
-      
+      print(to, subject, email_body)
       send_email(to = to,
                  subject = subject,
                  body = email_body)
