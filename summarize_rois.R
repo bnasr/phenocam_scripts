@@ -65,8 +65,6 @@ for(i in 1:n)
   abline(v = enddate, col = 'yellow')
   # polygon(usr[c(1,2,2,1)], usr[c(3,3,4,4)], border = 'yellow', lwd= 5)
   
-  mtext(paste(), outer = T)
-  
   mtext(outer = TRUE,
         text = paste('ROI: ', roi_name, 
                      '\tType: ', site_type,
