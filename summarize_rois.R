@@ -15,7 +15,7 @@ rois <- merge(rois, phenos[,.(site, site_type)])
 rois <- rois[sequence_number%in%seq(1000, 9000, 1000)]
 
 n <- nrow(rois)
-i=233
+
 pb <- txtProgressBar(1, n, style = 3)
 
 # for(i in 1:n)
