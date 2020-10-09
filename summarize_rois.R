@@ -18,7 +18,8 @@ n <- nrow(rois)
 i=233
 pb <- txtProgressBar(1, n, style = 3)
 
-for(i in 1:n){
+# for(i in 1:n)
+{
   site <- rois[i, site]
   roi_name <- rois[i, roi_name]
   site_type <- rois[i, site_type]
@@ -64,9 +65,14 @@ for(i in 1:n){
   abline(v = enddate, col = 'yellow')
   # polygon(usr[c(1,2,2,1)], usr[c(3,3,4,4)], border = 'yellow', lwd= 5)
   
-  mtext(paste(roi_name, '   Type = ', site_type), outer = T)
+  mtext(paste(), outer = T)
   
-  mtext(line = 2, paste('Lenght:', site_years, 'y', 'Gap:', missing_data_pct, '%', 'Last:', last_date))
+  mtext(outer = TRUE,
+        text = paste('\ROI: ', roi_name, 
+                     '\tType: ', site_type,
+                     '\tLenght:', site_years, 'y', 
+                     '\tGap:', missing_data_pct, '%\t',
+                     '\tLast:', last_date))
   
   dev.off()
   
