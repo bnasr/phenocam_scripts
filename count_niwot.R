@@ -3,7 +3,7 @@ y <- year(Sys.Date())
 
 inout_dir <- '/home/bijan/phenocam_scripts/'
 
-dt <- fread(paste0(inout_dir, 'countNiwot.txt'), skip =2)
+dt <- fread(paste0(inout_dir, 'count_niwot.txt'), skip =2)
 dt[, V1 := as.numeric(gsub(pattern = 'DOY |:', replacement = '', V1))]
 dt[, date := as.Date(sprintf('%04d-12-31', y - 1)) + V1]
 dt[, n := V2]
@@ -18,7 +18,7 @@ today <- Sys.Date()
 date_range <- today - c(30:0)
 
 
-png(paste0(inout_dir, 'countNiwot.png'),
+png(paste0(inout_dir, 'count_niwot.png'),
     width = 8, height = 5, units = 'in', res = 300)
 plot(dt[date  %in% date_range],
      xlim = range(date_range),
