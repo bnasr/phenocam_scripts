@@ -4,6 +4,9 @@ library(xROI)
 library(jpeg)
 
 
+out_dir <- 'rois/update/'
+dir.create(out_dir, recursive = TRUE, showWarnings = TRUE)
+
 rois <- get_rois()
 phenos <- get_phenos()
 
@@ -43,7 +46,7 @@ for(i in 1:n){
   
   # w <- (clitxt$Date>=clRange[1]) & (clitxt$Date<=clRange[2]) 
   
-  png(file = paste0('rois/update/', roi_name, '.png'), width = 11, height = 5, res = 300, units = 'in')
+  png(file = paste0(out_dir, roi_name, '.png'), width = 11, height = 5, res = 300, units = 'in')
   
   par(mfrow = c(2,1), mar = c(0,0,0,0), oma = c(2,2,2,0))
   plot(ts1$date, ts1$gcc_90, col = 'cyan', type = 'l', xaxs='i',yaxs='i',  xaxt = 'n', xlim = xrange)
