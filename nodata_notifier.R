@@ -117,6 +117,8 @@ if(n!=0 & n<20)for(i in 1:n){
       send_email(to = to,
                  subject = subject,
                  body = body)
+    }else{
+      print('The script has been run alread today!')
     }  
   }else{
     print('Unknown last run!') 
