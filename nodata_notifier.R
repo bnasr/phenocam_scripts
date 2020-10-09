@@ -109,10 +109,8 @@ if(n!=0 & n<20)for(i in 1:n){
       to <- email_table[i, contact1]
       if(email_table[i,contact2]!='' & email_table[i,contact1]!=email_table[i,contact2]) to <- c(to, email_table[i, contact2])
       
-      email_body <- gsub(email_body_template,
-                         pattern = '$SITENAME', replacement = site)
-      email_body <- gsub(email_body,
-                         pattern = '$DELAY', replacement = delay)
+      email_body <- gsub(email_body_template, pattern = '$SITENAME', replacement = site, fixed = TRUE)
+      email_body <- gsub(email_body, pattern = '$DELAY', replacement = delay, fixed = TRUE)
       
       send_email(to = to,
                  subject = subject,

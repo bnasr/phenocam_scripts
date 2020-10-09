@@ -2,7 +2,7 @@ Hi,
                        
 *** This is an automatic email from the PhenoCam data management team. ***
                        
-The PhenoCam camera at $SITENAME has not uploaded any image in the past ', $DELAY,' days. 
+The PhenoCam camera at $SITENAME has not uploaded any image in the past $DELAY days. 
 
 Please let us know if you are aware of an issue at this site. Ignore this email, if you have 
 already been investigating the issue or this delay is normal for the site.
