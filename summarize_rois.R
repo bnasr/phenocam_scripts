@@ -7,7 +7,7 @@ library(jpeg)
 rois <- get_rois()
 phenos <- get_phenos()
 
-rois <- merge(rois, phenos[,.(site, site_type, )])
+rois <- merge(rois, phenos[,.(site, site_type)])
 
 rois <- rois[sequence_number%in%seq(1000, 9000, 1000)]
 
