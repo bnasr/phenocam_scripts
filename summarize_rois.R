@@ -4,7 +4,7 @@ library(xROI)
 library(jpeg)
 
 
-out_dir <- 'rois/update/'
+out_dir <- '~/phenocam_scripts/rois/update/'
 dir.create(out_dir, recursive = TRUE, showWarnings = FALSE)
 
 rois <- get_rois()
