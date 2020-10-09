@@ -7,18 +7,22 @@ library(jpeg)
 rois <- get_rois()
 phenos <- get_phenos()
 
-rois <- merge(rois, phenos[,.(site, site_type)])
+rois <- merge(rois, phenos[,.(site, site_type, )])
 
 rois <- rois[sequence_number%in%seq(1000, 9000, 1000)]
 
 n <- nrow(rois)
-# i=233
+i=233
 pb <- txtProgressBar(1, n, style = 3)
 
 for(i in 1:n){
   site <- rois[i, site]
   roi_name <- rois[i, roi_name]
   site_type <- rois[i, site_type]
+  site_years <- missing_data_pct <- rois[i, site_years]
+  missing_data_pct <- rois[i, missing_data_pct]
+  last_date <- missing_data_pct <- rois[i, last_date]
+  
   
   roi <- parseROI(paste0('/data/archive/', site, '/ROI/', roi_name, '_roi.csv'))
   startdate <- as.Date(sapply(roi$masks, FUN = function(x){x$startdate}))
@@ -58,6 +62,8 @@ for(i in 1:n){
   # polygon(usr[c(1,2,2,1)], usr[c(3,3,4,4)], border = 'yellow', lwd= 5)
   
   mtext(paste(roi_name, '   Type = ', site_type), outer = T)
+  
+  mtext(line = 2, paste('Lenght:', site_years, 'y', 'Gap:', missing_data_pct, '%', 'Last:', last_date))
   
   dev.off()
   
