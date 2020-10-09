@@ -194,7 +194,7 @@ if(file.exists(lastrun.file)) lastrun.phenoemail <- readLines(lastrun.file)
 
 n <- nrow(emailDT)
 
-if(n!=0)for(i in 1:n){
+if(n!=0 & n<20)for(i in 1:n){
   
   to <- emailDT[i,contact1]
   if(to==''){
