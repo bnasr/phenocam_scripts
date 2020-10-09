@@ -25,7 +25,7 @@ for(i in 1:n)
   site_type <- rois[i, site_type]
   site_years <- rois[i, site_years]
   missing_data_pct <- rois[i, missing_data_pct]
-  last_date <- missing_data_pct <- rois[i, last_date]
+  last_date <- rois[i, last_date]
   
   
   roi <- parseROI(paste0('/data/archive/', site, '/ROI/', roi_name, '_roi.csv'))
