@@ -1,0 +1,33 @@
+Hi,
+                       
+*** This is an automatic email from the PhenoCam data management team. ***
+                       
+The PhenoCam camera at $SITENAME has not uploaded any image in the past ', $DELAY,' days. 
+
+Please let us know if you are aware of an issue at this site. Ignore this email, if you have 
+already been investigating the issue or this delay is normal for the site.
+Site page: https://phenocam.sr.unh.edu/webcam/sites/$SITENAME
+Latest image: https://phenocam.sr.unh.edu/data/latest/$SITENAME.jpg
+
+Please feel free to email us, if you have questions or need troubleshooting assistance 
+to resolve issues. The automated emails will continue on a schedule (3, 5, 10, 20, 30, 60, 90, 
+and 120 days beyond the normal delay) until the uploads are resolved. Let us know if you would 
+like to change the normal delay from its default value.  If you have deactivated the site and 
+do not expect any further image uploads, please let us know and these messages will cease.
+                       
+Thank you for your continuous support of the PhenoCam network.
+                       
+Best,
+Bijan
+
+---
+Bijan Seyednasrollah, PhD
+PhenoCam Data Scientist
+https://bnasr.github.io/
+bijan.s.nasr@gmail.com
++1 928-523-1263
+
+---------------------------------------------------------------------------------------------------
+You are receiving this email because your email address has been listed as the main contact for 
+this site. Let us know if you would like to change this information.
+---------------------------------------------------------------------------------------------------

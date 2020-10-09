@@ -9,220 +9,122 @@ library(data.table, warn.conflicts = F)
 library(rjson, warn.conflicts = F)
 #library(rJava, warn.conflicts = F)
 library(mailR, warn.conflicts = F)
+library(phenocamapi, warn.conflicts = F)
 
-delayPairs <- t(data.frame(
-  aafcottawacfiaf14w = 20,
-  aafcottawacfiaf14e = 20,
-  arsmorris1 =10,
-  arsmorris2 =10,
-  arsmorris3 =10,
-  bouldinalfalfa = 20,
-  bouldincorn = 20,
-  coville = 1000,
-  eastend = 20,
-  eastend2 = 20,
-  esalb = 7,
-  eslm1 = 7,
-  eslm2 = 7,
-  eslma = 7,
-  exglsnotel = 1000,
-  imcrkfen = 7,
-  imcrkridge0 = 7,
-  imcrkridge1 = 7,
-  imcrktussock = 7,
-  kelloggcorn = 30,
-  kelloggswitchgrass = 7,
-  marcell = 7,
-  mayberry = 20,
-  montebondonegrass = 30,
-  montebondonepeat = 30,
-  sherman = 20,
-  shermanbarn = 20,
-  snipelake = 1000,
-  siwetland = 20,
-  tonzi = 20,
-  'torgnon-ld' = 7,
-  'torgnon-nd' = 7,
-  twitchell = 20,
-  twitchellalfalfa = 20,
-  twitchellalfalfa2 = 20,
-  vaira = 20,
-  westpond = 20
-))
+phenos <- get_phenos()
 
-colnames(delayPairs) <- 'normaldelay'
-normalDelay <- as.data.table(delayPairs)
-normalDelay$site <- gsub(pattern = '.', replacement = '-',rownames(delayPairs), fixed = T)
-#normalDelay
+#current path on klima
+working_dir <- '~/phenocam_scripts/'
 
-sendEmail <- function(to, subject, body){
-  sender <- "PhenoCam Network <phenocam.network@gmail.com>"
-  send.mail(from = sender,
+#path on Bijan's machine for debug
+if(Sys.info()['nodename']=="Bijans-MacBook-Pro.local") working_dir <- './'
+
+email_body_template <- readLines(paste0(working_dir, 'nodata_notifier.template'))
+delay_table <- fread(paste0(working_dir, 'nodata_notifier.delayed'))
+password <- readLines(paste0(working_dir, '.key'))
+
+reminder_interval <- c(3, 5, 10, 20, 30, 60, 90, 120)
+today <- as.Date(Sys.Date())
+
+
+sites_table <- phenos[active & site_type%in%c('I','II') & !grepl(pattern = 'NEON', x = site), 
+                      .(site, 
+                        site_type,
+                        date_last = as.Date(date_last),
+                        contact1, 
+                        contact2)]
+
+sites_table <- merge(sites_table, delay_table, by = 'site', all.x = TRUE)
+sites_table[is.na(normal_delay), normal_delay := 0]
+sites_table[, delay := as.integer(today - date_last)]
+
+#excluding Dennis's email
+sites_table[grepl(tolower(contact1), pattern = 'baldocchi@berkeley.edu'), contact1 := contact2]
+sites_table[grepl(tolower(contact1), pattern = 'berkeley.edu'), contact2 := '']
+
+delay_table <- sites_table[delay > 1]
+
+email_table <- delay_table[(delay- normal_delay) %in% reminder_interval & contact1!='']
+
+
+send_email <- function(to, subject, body){
+  
+  send.mail(from = "PhenoCam Network <phenocam.network@gmail.com>",
             to = to,
             subject = subject,
             body = body, 
             replyTo='Bijan Seyednasrollah <bijan.s.nasr@gmail.com>',
-            smtp = list(host.name = "smtp.gmail.com", port = 465,
+            smtp = list(host.name = "smtp.gmail.com", 
+                        port = 465,
                         user.name = "phenocam.network@gmail.com",
-                        passwd = readLines('~/phenocam_scripts/.key'),
+                        passwd = password,
                         ssl = TRUE
             ),
             authenticate = TRUE,
             send = TRUE)
+  
 }
 
 
-getPhenoTable <- function(){
-  
-  phenoSites <- fromJSON(file ='https://phenocam.sr.unh.edu/webcam/network/siteinfo/')
-  
-  ns <- length(phenoSites)
-  
-  phenoDT <- as.data.frame(matrix(NA, nrow = ns, ncol = 35))
-  colnames(phenoDT) <- names(phenoSites[[1]])
-  
-  for(i in 1:ns)  {
-    tmp <- sapply(phenoSites[[i]]  , function(x){if(is.null(x))NA else x})
-    phenoDT[i,] <- as.vector(unlist(tmp))
-  }
-  
-  
-  phenoDT <- as.data.table(phenoDT)
-  phenoDT[, contact1:=gsub(' AT ', '@', contact1)]
-  phenoDT[, contact2:=gsub(' AT ', '@', contact2)]
-  phenoDT[, contact1:=gsub(' DOT ', '.', contact1, fixed = T)]
-  phenoDT[, contact2:=gsub(' DOT ', '.', contact2, fixed = T)]
-  
-  phenoDT[, active:=active=='TRUE']
-  phenoDT[,date_end:=as.Date(date_end)]
-  phenoDT[,date_start:=as.Date(date_start)]
-  phenoDT$last <- date(Sys.time()) - phenoDT$date_end 
-  
-  # normalDelay <- as.data.table(read.csv('/home/bijan/bijanScripts/normalDelay.csv')) 
-  phenoDT <- merge(phenoDT, normalDelay, by = 'site', all.x = T)
-  phenoDT[is.na(normaldelay), normaldelay:=0]
-  phenoDT[,delay:= last - normaldelay]
-  
-  phenoDT
+#alternative function in case the first one stops working
+send_email2 <- function(to, subject, body){
+  sender <- "PhenoCam Network <phenocam.netwrok@gmail.com>"
+  Server=list(smtpServer='localhost')
+  sendmail(sender, to, subject, body, control=Server)
 }
 
-reminderInterval <- c(3, 5, 10, 20, 30, 60, 90, 120)
-
-phenoDT <- getPhenoTable()
-# phenoDT[grepl(pattern = 'rfbrown@sevilleta.unm.edu', paste(contact1, contact2)), site]
-
-# print('List of sites with delay:')
-delayList <- phenoDT[delay>1&active&site_type%in%c('I','II'),.(site, last, contact1, contact2)] #[order(last)]
-
-#email table
-emailDT <- phenoDT[(delay%in%reminderInterval|
-                      (delay%in%c(2)&site=='luckyhills'))&
-                     active&
-                     site_type%in%c('I','II'),
-                   .(site, last, normaldelay,
-                     contact1, contact2, 
-                     body = paste0(
-                       
-                       'Hi,\n\n',
-                       
-                       '*** This is an automatic email from the PhenoCam data management team. ***\n\n',
-                       
-                       'The PhenoCam camera at ', site, ' has not uploaded any image in the past ', last,' days. \n',
-                       'Please let us know if you are aware of an issue at this site. Ignore this email, if you\n',
-                       'have already been investigating the issue or this delay is normal for the site.\n\n',
-                       'Site page: ', 'https://phenocam.sr.unh.edu/webcam/sites/', site, '/\n',
-                       'Latest image: ', 'https://phenocam.sr.unh.edu/data/latest/', site, '.jpg\n\n',
-
-                       'Please feel free to email us, if you have questions or need troubleshooting assistance \n',
-                       'to resolve issues. The automated emails will continue on a schedule (3, 5, 10, 20, 30, 60, 90, \n',
-                       'and 120 days beyond the normal delay) until the uploads are resolved. Let us know if you \n',
-                       'would like to change the normal delay from its default value.  If you have deactivated the \n',
-                       'site and do not expect any further image uploads, please let us know and these messages will \n',
-                       'cease.\n\n',
-                       
-                       'Thank you for your continuous support of the PhenoCam network.\n',
-                       '\n\n',
-                       
-                       'Best,\n',
-                       'Bijan\n',
-                       '\n',
-                       '---\n',
-                       'Bijan Seyednasrollah, PhD\n',
-                       'PhenoCam Data Scientist\n',
-                       'https://bnasr.github.io/\n',
-                       'bijan.s.nasr@gmail.com\n',
-                       '+1 928-523-1263\n',
-                       '\n',
-                       '---------------------------------------------------------------------------------\n',
-                       'You are receiving this email because your email address has \n',
-                       'been listed as the main contact for this site. Let us know if \n',
-                       'you would like to change this information.\n',
-                       '---------------------------------------------------------------------------------\n'),
-                     subject = paste0('phenocam at ', site, ': no image in ', last,' days'))]
-
-#correcting NEON contacts
-emailDT[grepl(pattern = 'NEON', x = site), contact2 := ""]
-emailDT[grepl(pattern = 'NEON', x = site), contact1 := "Teresa Burlingame <tburlingame@battelleecology.org>"]
 
 
 
-emailList <- emailDT[,.(site, last, contact1, contact2)]
+# sending emails to the admins
+send_email(to = c('bijan.s.nasr@gmail.com','adam.young@nau.edu'),
+           body = paste(
+             'Email list:\n----\n', paste(capture.output(as.data.frame(email_table[,.(site, date_last, delay, contact1, contact2)])), collapse="\n"),
+             '\n\n',
+             'Delay list:\n----\n', paste(capture.output(as.data.frame(delay_table[, .(site, date_last, delay, contact1, contact2)])), collapse="\n"), 
+             sep = '\n'), 
+           subject = paste('PhenCams', as.character(Sys.Date())))
 
 
-con <- textConnection(object = 'myemail', 'w')
-writeLines('', con = con)
-writeLines('Email list:', con = con)
-writeLines('------', con = con)
-write.table(emailList, file  = con, row.names = F, col.names = F, quote = F, sep = '\t')
-writeLines('', con = con)
-writeLines('', con = con)
-writeLines('Delay list:', con = con)
-writeLines('------', con = con)
-write.table(delayList, file  = con, row.names = F, col.names = F, quote = F, sep = '\t')
-# writeLines(kable(delayList), con = con)
-# writeLines(kable(emailList), con = con)
-close.connection(con)
-
-#myemailBody <- ''
-#for(i in 1:length(myemail)) myemailBody <- paste(myemailBody, myemail[i], '\n')
-
-myemailBody <- paste(myemail, collapse='\n')
-
-sendEmail(to = c('bijan.s.nasr@gmail.com','adam.young@nau.edu'), body = myemailBody, subject = paste('PhenCams', as.character(Sys.Date())))
 
 
+#check the last run to avoid sending more than one email accidentally
 lastrun.file <- '/tmp/~lastrun.phenoemail'
 if(file.exists(lastrun.file)) lastrun.phenoemail <- readLines(lastrun.file)
 
 
-n <- nrow(emailDT)
+
+# sending emails one by one
+n <- nrow(email_table)
 
 if(n!=0 & n<20)for(i in 1:n){
-  
-  to <- emailDT[i,contact1]
-  if(to==''){
-    next()
-  }
-  
-  #excluding Dennis 
-  if(grepl('baldocchi@berkeley.edu', emailDT[i,contact1]))to <- emailDT[i,contact2]
-  if(grepl('baldocchi@berkeley.edu', emailDT[i,contact2]))to <- emailDT[i,contact1]
-
-  if(emailDT[i,contact2]!=''&emailDT[i,contact1]!=emailDT[i,contact2]) to <- c(to, emailDT[i,contact2])
-  
   if(exists('lastrun.phenoemail')){
     if(lastrun.phenoemail!=as.character(Sys.Date()))
     {  
-      sendEmail(to = to,
-                subject = emailDT[i,subject],
-                body = emailDT[i,body])
+      site <- email_table[i, site]
+      delay <- email_table[i, delay]
+      
+      subject <- paste0('phenocam at ', site, ': no image in ', delay,' days')
+      
+      to <- email_table[i, contact1]
+      if(email_table[i,contact2]!='' & email_table[i,contact1]!=email_table[i,contact2]) to <- c(to, email_table[i, contact2])
+      
+      email_body <- gsub(email_body_template,
+                   pattern = '$SITENAME', replacement = site)
+      email_body <- gsub(email_body,
+                         pattern = '$DELAY', replacement = delay)
+      
+      send_email(to = to,
+                 subject = subject,
+                 body = body)
     }  
   }else{
     print('Unknown last run!') 
   }
   
-  
 }
 
+
+# write today's date to the local file
 writeLines(as.character(Sys.Date()), lastrun.file)
 
