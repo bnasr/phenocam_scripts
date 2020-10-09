@@ -22,6 +22,7 @@ if(Sys.info()['nodename']=="Bijans-MacBook-Pro.local") working_dir <- './'
 email_body_template <- readLines(paste0(working_dir, 'nodata_notifier.template'))
 delay_table <- fread(paste0(working_dir, 'nodata_notifier.delayed'))
 password <- readLines(paste0(working_dir, '.key'))
+lastrun.file <- '/tmp/~lastrun.phenoemail'
 
 reminder_interval <- c(3, 5, 10, 20, 30, 60, 90, 120)
 today <- as.Date(Sys.Date())
@@ -89,7 +90,6 @@ send_email(to = c('bijan.s.nasr@gmail.com','adam.young@nau.edu'),
 
 
 #check the last run to avoid sending more than one email accidentally
-lastrun.file <- '/tmp/~lastrun.phenoemail'
 if(file.exists(lastrun.file)) lastrun.phenoemail <- readLines(lastrun.file)
 
 
@@ -110,13 +110,13 @@ if(n!=0 & n<20)for(i in 1:n){
       if(email_table[i,contact2]!='' & email_table[i,contact1]!=email_table[i,contact2]) to <- c(to, email_table[i, contact2])
       
       email_body <- gsub(email_body_template,
-                   pattern = '$SITENAME', replacement = site)
+                         pattern = '$SITENAME', replacement = site)
       email_body <- gsub(email_body,
                          pattern = '$DELAY', replacement = delay)
       
       send_email(to = to,
                  subject = subject,
-                 body = body)
+                 body = email_body)
     }else{
       print('The script has been run alread today!')
     }  
