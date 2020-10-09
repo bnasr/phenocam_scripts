@@ -19,7 +19,7 @@ working_dir <- '~/phenocam_scripts/'
 #path on Bijan's machine for debug
 if(Sys.info()['nodename']=="Bijans-MacBook-Pro.local") working_dir <- './'
 
-email_body_template <- readLines(paste0(working_dir, 'nodata_notifier.template'))
+email_body_template <- paste(readLines(paste0(working_dir, 'nodata_notifier.template')), collapse = '\n')
 delay_table <- fread(paste0(working_dir, 'nodata_notifier.delayed'))
 password <- readLines(paste0(working_dir, '.key'))
 lastrun.file <- '/tmp/~lastrun.phenoemail'
@@ -113,7 +113,7 @@ if(n!=0 & n<20)for(i in 1:n){
                          pattern = '$SITENAME', replacement = site)
       email_body <- gsub(email_body,
                          pattern = '$DELAY', replacement = delay)
-      print(to, subject, email_body)
+      
       send_email(to = to,
                  subject = subject,
                  body = email_body)
