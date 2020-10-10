@@ -6,6 +6,7 @@
 
 library(lubridate, warn.conflicts = F)
 library(data.table, warn.conflicts = F)
+library(RCurl, warn.conflicts = F)
 library(rjson, warn.conflicts = F)
 #library(rJava, warn.conflicts = F)
 library(mailR, warn.conflicts = F)
