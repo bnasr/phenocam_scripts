@@ -1,4 +1,6 @@
 # Ploting CLI images for each ROI to check the data continuity
+library(RCurl)
+library(rjson)
 library(phenocamapi)
 library(xROI)
 library(jpeg)
