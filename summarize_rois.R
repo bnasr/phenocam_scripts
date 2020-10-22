@@ -57,7 +57,7 @@ for(i in 1:n)
   abline(v = startdate, col = 'red')
   abline(v = enddate, col = 'red')
   
-  legend('topright', legend = c('1-day', '3-day', 'mask'), 
+  legend('left', legend = c('1-day', '3-day', 'mask'), 
          col = c('cyan', 'black', 'red'), lty = c(1,1,1), lwd = c(2,2,2), bty = 'n')
   
   plot(ts3$date, ts3$gcc_90, type = 'n', xaxs='i',yaxs='i', yaxt = 'n', xlim = xrange)
@@ -70,8 +70,8 @@ for(i in 1:n)
   mtext(outer = TRUE,
         text = paste('ROI: ', roi_name, 
                      '\tType: ', site_type,
-                     '\tLenght:', site_years, 'y', 
-                     '\tGap:', missing_data_pct, '%\t',
+                     '\tLength:', site_years, 'y', 
+                     '\tMissing:', missing_data_pct, '%\t',
                      '\tLast:', last_date))
   
   dev.off()
