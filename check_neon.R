@@ -47,15 +47,15 @@ neon_rois[, skipped_dates := NA]
 
 pb = txtProgressBar(1, n, style = 3)
 
-skipped_dates_file <- file(paste0(out_dir, 'summarize_neon_skipped_dates_file.csv'), open = 'w')
+skipped_dates_file <- file(paste0(out_dir, 'check_neon_skipped_dates_file.csv'), open = 'w')
 close(skipped_dates_file)
 
-skipped_middays_file <- file(paste0(out_dir, 'summarize_neon_skipped_middays_file.csv'), open = 'w')
+skipped_middays_file <- file(paste0(out_dir, 'check_neon_skipped_middays_file.csv'), open = 'w')
 close(skipped_middays_file)
 
-summarize_neon <- file(paste0(out_dir, 'summarize_neon.csv'), open = 'w')
-writeLines('roi_name,site_years,missing_data_pct,skipped_dates,skipped_middays', con = summarize_neon)
-close(summarize_neon)
+check_neon <- file(paste0(out_dir, 'check_neon.csv'), open = 'w')
+writeLines('roi_name,site_years,missing_data_pct,skipped_dates,skipped_middays', con = check_neon)
+close(check_neon)
 
 
 for(i in 1:n){
@@ -79,26 +79,26 @@ for(i in 1:n){
     skipped_middays <- dt[is.na(midday) & !is.na(gcc), date]
     
     if(length(skipped_dates) > 0 ){
-      skipped_dates_file <- file(paste0(out_dir, 'summarize_neon_skipped_dates_file.csv'), open = 'a')
+      skipped_dates_file <- file(paste0(out_dir, 'check_neon_skipped_dates_file.csv'), open = 'a')
       writeLines(paste(site, skipped_dates, sep = ','), con = skipped_dates_file)
       close(skipped_dates_file)
     }    
     
     if(length(skipped_middays) > 0 ){
-      skipped_middays_file <- file(paste0(out_dir, 'summarize_neon_skipped_middays_file.csv'), open = 'a')
+      skipped_middays_file <- file(paste0(out_dir, 'check_neon_skipped_middays_file.csv'), open = 'a')
       writeLines(paste(site, skipped_middays, sep = ','), con = skipped_middays_file)
       close(skipped_middays_file)
     }    
     
-    summarize_neon <- file(paste0(out_dir, 'summarize_neon.csv'), open = 'a')
+    check_neon <- file(paste0(out_dir, 'check_neon.csv'), open = 'a')
     writeLines(paste(neon_rois$roi_name[i],
                      neon_rois$site_years[i],
                      neon_rois$missing_data_pct[i],
                      length(skipped_dates), 
                      length(skipped_middays), 
                      sep = ','), 
-               con = summarize_neon)
-    close(summarize_neon)
+               con = check_neon)
+    close(check_neon)
     
   }
   setTxtProgressBar(pb, i)
