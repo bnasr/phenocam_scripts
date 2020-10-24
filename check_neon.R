@@ -40,7 +40,8 @@ write.table(phenos[grepl(x= site, pattern = 'NEON'),
             file = paste0(out_dir, 'neon_sites_metadata.csv'),
             row.names = FALSE)
 
- phenocam_server = "http://phenocam.sr.unh.edu"
+
+phenocam_server = "http://phenocam.sr.unh.edu"
 
 n <- nrow(neon_rois)
 neon_rois[, skipped_dates := NA]
@@ -64,7 +65,7 @@ for(i in 1:n){
   roi_first_date <- neon_rois[i, roi_first_date]
   roi_last_date <- neon_rois[i, roi_last_date]
   
-  ts <- fread(neon_rois[i, one_day_summary], verbose = FALSE)
+  ts <- fread(neon_rois[i, one_day_summary], verbose = FALSE, showProgress = FALSE)
   
   url <- sprintf("%s/webcam/network/middayimglist/%s", phenocam_server, site)
   midday_table <- try(jsonlite::fromJSON(url))  
@@ -73,7 +74,7 @@ for(i in 1:n){
     midday <- setDT(midday_table$images)
     
     dt <- merge(midday[as.Date(date) > roi_first_date & as.Date(date) < roi_last_date,
-                       .(date, midday = TRUE)], ts[,.(date, gcc = TRUE)], all = TRUE)
+                       .(date, midday = TRUE)], ts[!is.na(gcc_mean),.(date, gcc = TRUE)], all = TRUE)
     
     skipped_dates <- dt[!is.na(midday) & is.na(gcc), date]
     skipped_middays <- dt[is.na(midday) & !is.na(gcc), date]

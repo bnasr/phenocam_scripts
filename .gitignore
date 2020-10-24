@@ -5,3 +5,7 @@
 .key
 rois/
 update
+check_neon.csv
+check_neon_skipped_dates_file.csv
+check_neon_skipped_middays_file.csv
+neon_sites_metadata.csv
