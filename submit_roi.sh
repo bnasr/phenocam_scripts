@@ -49,16 +49,9 @@ echo "\n#------------------------"
 echo "#conda activating $ENV_NAME ...\n"
 conda activate $ENV_NAME
 
-
 ROI_NAME="${VEG_TYPE}_${ROI_ID}"
 
-
-
-#echo $roi_file $USERNAME
-
-#Test running add_roi_list.py script:
-
-
+# add the database entry
 $PATH_TO_SCRIPT -v -u $USERNAME $SITE_NAME $ROI_NAME
 
 conda deactivate
@@ -68,9 +61,9 @@ echo "#------------------------\n"
 
 
 echo "\n#Copynig the ROI files to klima ... \n"
-scp ${SITE_NAME}_${ROI_NAME}_roi.csv klima.sr.unh.edu:/data/archive/${SITE_NAME}/ROI/
-scp ${SITE_NAME}_${ROI_NAME}_*.tif klima.sr.unh.edu:/data/archive/${SITE_NAME}/ROI/
-scp ${SITE_NAME}_${ROI_NAME}_*_vector.csv klima.sr.unh.edu:/data/archive/${SITE_NAME}/ROI/
+scp ${SITE_NAME}_${ROI_NAME}_roi.csv ${USERNAME}@klima.sr.unh.edu:/data/archive/${SITE_NAME}/ROI/
+scp ${SITE_NAME}_${ROI_NAME}_*.tif ${USERNAME}@klima.sr.unh.edu:/data/archive/${SITE_NAME}/ROI/
+scp ${SITE_NAME}_${ROI_NAME}_*_vector.csv ${USERNAME}@klima.sr.unh.edu:/data/archive/${SITE_NAME}/ROI/
 echo "\n#ROI files were copied!\n"
 
 
